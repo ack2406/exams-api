@@ -11,7 +11,7 @@ class Set(Base):
     description = Column(String)
     picture_path = Column(String)
 
-    questions = relationship("Card", back_populates="set")
+    questions = relationship("Question", back_populates="set")
 
 
 class Question(Base):
@@ -35,3 +35,4 @@ class Answer(Base):
     question_id = Column(Integer, ForeignKey("questions.id"))
 
     question = relationship("Question", back_populates="answers")
+
