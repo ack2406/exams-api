@@ -25,6 +25,13 @@ def remove_set(db: Session, set_id: int):
     db.commit()
     return db_set
 
+#read_question
+def read_question(db: Session, question_id: int):
+    return db.query(models.Question).filter(models.Question.id == question_id).first()
+
+#read_questions
+def read_questions(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Question).offset(skip).limit(limit).all()
 
 #create_question
 def create_question(db: Session, question: schemas.QuestionCreate, set_id: int):
@@ -41,6 +48,14 @@ def remove_question(db: Session, question_id: int):
     db.commit()
     return db_question
 
+
+#read_answer
+def read_answer(db: Session, answer_id: int):
+    return db.query(models.Answer).filter(models.Answer.id == answer_id).first()
+
+#read_answers
+def read_answers(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Answer).offset(skip).limit(limit).all()
 
 #create_answer
 def create_answer(db: Session, answer: schemas.AnswerCreate, question_id: int):
