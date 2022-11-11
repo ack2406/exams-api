@@ -14,6 +14,7 @@ class Answer(AnswerBase):
     class Config:
         orm_mode = True
 
+
 class QuestionBase(BaseModel):
     content: str
     picture_path: str
@@ -27,6 +28,7 @@ class Question(QuestionBase):
 
     class Config:
         orm_mode = True
+
 
 class SetBase(BaseModel):
     name: str
@@ -42,4 +44,3 @@ class Set(SetBase):
 
     class Config:
         orm_mode = True
-        
