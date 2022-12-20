@@ -2,28 +2,28 @@ from sqlalchemy.orm import Session
 
 from . import models, schemas
 
-#create_set
-def create_set(db: Session, set: schemas.SetCreate):
-    db_set = models.Set(**set.dict())
-    db.add(db_set)
+#create_test
+def create_test(db: Session, test: schemas.TestCreate):
+    db_test = models.Test(**test.dict())
+    db.add(db_test)
     db.commit()
-    db.refresh(db_set)
-    return db_set
+    db.refresh(db_test)
+    return db_test
 
-#read_set
-def read_set(db: Session, set_id: int):
-    return db.query(models.Set).filter(models.Set.id == set_id).first()
+#read_test
+def read_test(db: Session, test_id: int):
+    return db.query(models.Test).filter(models.Test.id == test_id).first()
 
-#read_sets
-def read_sets(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Set).offset(skip).limit(limit).all()
+#read_tests
+def read_tests(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Test).offset(skip).limit(limit).all()
 
-#remove_set
-def remove_set(db: Session, set_id: int):
-    db_set = db.query(models.Set).filter(models.Set.id == set_id).first()
-    db.delete(db_set)
+#remove_test
+def remove_test(db: Session, test_id: int):
+    db_test = db.query(models.Test).filter(models.Test.id == test_id).first()
+    db.delete(db_test)
     db.commit()
-    return db_set
+    return db_test
 
 #read_question
 def read_question(db: Session, question_id: int):
@@ -34,8 +34,8 @@ def read_questions(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Question).offset(skip).limit(limit).all()
 
 #create_question
-def create_question(db: Session, question: schemas.QuestionCreate, set_id: int):
-    db_question = models.Question(**question.dict(), set_id=set_id)
+def create_question(db: Session, question: schemas.QuestionCreate, test_id: int):
+    db_question = models.Question(**question.dict(), test_id=test_id)
     db.add(db_question)
     db.commit()
     db.refresh(db_question)

@@ -3,15 +3,15 @@ from sqlalchemy.orm import relationship
 
 from .database import Base
 
-class Set(Base):
-    __tablename__ = "sets"
+class Test(Base):
+    __tablename__ = "tests"
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     description = Column(String)
     picture_path = Column(String)
 
-    questions = relationship("Question", back_populates="set")
+    questions = relationship("Question", back_populates="test")
 
 
 class Question(Base):
@@ -20,9 +20,9 @@ class Question(Base):
     id = Column(Integer, primary_key=True, index=True)
     content = Column(String)
     picture_path = Column(String)
-    set_id = Column(Integer, ForeignKey("sets.id"))
+    test_id = Column(Integer, ForeignKey("tests.id"))
 
-    set = relationship("Set", back_populates="questions")
+    test = relationship("Test", back_populates="questions")
     answers = relationship("Answer", back_populates="question")
 
 

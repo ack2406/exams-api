@@ -1,8 +1,8 @@
-CREATE DATABASE exams;
+CREATE DATABASE Exams;
 
 \c exams;
 
-CREATE TABLE sets (
+CREATE TABLE tests (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description VARCHAR(255) NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE questions (
     id SERIAL PRIMARY KEY,
     content VARCHAR(255) NOT NULL,
     picture_path VARCHAR(255) NOT NULL,
-    set_id INT NOT NULL REFERENCES sets(id)
+    test_id INT NOT NULL REFERENCES tests(id)
 );
 
 

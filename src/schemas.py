@@ -30,15 +30,15 @@ class Question(QuestionBase):
         orm_mode = True
 
 
-class SetBase(BaseModel):
+class TestBase(BaseModel):
     name: str
     description: str
     picture_path: str
 
-class SetCreate(SetBase):
+class TestCreate(TestBase):
     pass
 
-class Set(SetBase):
+class Test(TestBase):
     id: int
     questions: list[Question] = []
 

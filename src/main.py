@@ -5,8 +5,15 @@ from . import crud, models, schemas
 from .database import SessionLocal, engine
 
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import OAuth2PasswordBearer
+
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = FastAPI()
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -15,6 +22,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+def api_key_auth(api_key: str = Depends(oauth2_scheme)):
+    if api_key not in os.getenv("API_KEYS"):
+        raise HTTPException(status_code=400, detail="Invalid API key")
 
 def get_db():
     db = SessionLocal()
@@ -25,42 +38,42 @@ def get_db():
 
 
 
-@app.get("/sets/", response_model=list[schemas.Set])
-def read_sets(db: Session = Depends(get_db)):
-    sets = crud.read_sets(db)
-    return sets
+@app.get("/tests/", response_model=list[schemas.Test])
+def read_tests(db: Session = Depends(get_db)):
+    tests = crud.read_tests(db)
+    return tests
 
-@app.get("/sets/{set_id}", response_model=schemas.Set)
-def read_set(set_id: int, db: Session = Depends(get_db)):
-    db_set = crud.read_set(db, set_id=set_id)
-    if db_set is None:
-        raise HTTPException(status_code=404, detail="Set not found")
-    return db_set
-
-#add authentication
-@app.post("/sets/", response_model=schemas.Set)
-def create_set(set: schemas.SetCreate, db: Session = Depends(get_db)):
-    return crud.create_set(db=db, set=set)
-
-@app.delete("/sets/{set_id}", response_model=schemas.Set)
-def remove_set(set_id: int, db: Session = Depends(get_db)):
-    db_set = crud.remove_set(db, set_id=set_id)
-    if db_set is None:
-        raise HTTPException(status_code=404, detail="Set not found")
-    return db_set
+@app.get("/tests/{test_id}", response_model=schemas.Test)
+def read_test(test_id: int, db: Session = Depends(get_db)):
+    db_test = crud.read_test(db, test_id=test_id)
+    if db_test is None:
+        raise HTTPException(status_code=404, detail="Test not found")
+    return db_test
 
 
+@app.post("/tests/", response_model=schemas.Test, dependencies=[Depends(api_key_auth)])
+def create_test(test: schemas.TestCreate, db: Session = Depends(get_db)):
+    return crud.create_test(db=db, test=test)
 
-@app.get("/sets/{set_id}/questions/", response_model=list[schemas.Question])
-def read_questions(set_id: int, db: Session = Depends(get_db)):
-    db_set = crud.read_set(db, set_id=set_id)
-    if db_set is None:
-        raise HTTPException(status_code=404, detail="Set not found")
-    return db_set.questions
+@app.delete("/tests/{test_id}", response_model=schemas.Test)
+def remove_test(test_id: int, db: Session = Depends(get_db)):
+    db_test = crud.remove_test(db, test_id=test_id)
+    if db_test is None:
+        raise HTTPException(status_code=404, detail="Test not found")
+    return db_test
 
-@app.post("/sets/{set_id}/questions/", response_model=schemas.Question)
-def create_question(question: schemas.QuestionCreate, set_id: int, db: Session = Depends(get_db)):
-    return crud.create_question(db=db, question=question, set_id=set_id)
+
+
+@app.get("/tests/{test_id}/questions/", response_model=list[schemas.Question])
+def read_questions(test_id: int, db: Session = Depends(get_db)):
+    db_test = crud.read_test(db, test_id=test_id)
+    if db_test is None:
+        raise HTTPException(status_code=404, detail="Test not found")
+    return db_test.questions
+
+@app.post("/tests/{test_id}/questions/", response_model=schemas.Question)
+def create_question(question: schemas.QuestionCreate, test_id: int, db: Session = Depends(get_db)):
+    return crud.create_question(db=db, question=question, test_id=test_id)
 
 @app.get("/questions/{question_id}", response_model=schemas.Question)
 def read_question(question_id: int, db: Session = Depends(get_db)):
