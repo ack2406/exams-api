@@ -7,6 +7,9 @@ class AnswerBase(BaseModel):
 class AnswerCreate(AnswerBase):
     pass
 
+class AnswerUpdate(AnswerBase):
+    pass
+
 class Answer(AnswerBase):
     id: int
     question_id: int
@@ -20,6 +23,9 @@ class QuestionBase(BaseModel):
     picture_path: str
 
 class QuestionCreate(QuestionBase):
+    pass
+
+class QuestionUpdate(QuestionBase):
     pass
 
 class Question(QuestionBase):
@@ -36,6 +42,9 @@ class TestBase(BaseModel):
     picture_path: str
 
 class TestCreate(TestBase):
+    pass
+
+class TestUpdate(TestBase):
     pass
 
 class Test(TestBase):
