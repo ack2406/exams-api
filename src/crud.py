@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 
 from . import models, schemas
 
+
 #create_test
 def create_test(db: Session, test: schemas.TestCreate):
     db_test = models.Test(**test.dict())
@@ -23,6 +24,17 @@ def remove_test(db: Session, test_id: int):
     db_test = db.query(models.Test).filter(models.Test.id == test_id).first()
     db.delete(db_test)
     db.commit()
+    return db_test
+
+#update_test
+def update_test(db: Session, test_id: int, test: schemas.TestCreate):
+    db_test = db.query(models.Test).filter(models.Test.id == test_id).first()
+    db_test.title = test.title
+    db_test.description = test.description
+    db_test.time = test.time
+    db_test.is_active = test.is_active
+    db.commit()
+    db.refresh(db_test)
     return db_test
 
 #read_question
@@ -48,6 +60,16 @@ def remove_question(db: Session, question_id: int):
     db.commit()
     return db_question
 
+#update_question
+def update_question(db: Session, question_id: int, question: schemas.QuestionCreate):
+    db_question = db.query(models.Question).filter(models.Question.id == question_id).first()
+    db_question.title = question.title
+    db_question.description = question.description
+    db_question.time = question.time
+    db.commit()
+    db.refresh(db_question)
+    return db_question
+
 
 #read_answer
 def read_answer(db: Session, answer_id: int):
@@ -70,4 +92,14 @@ def remove_answer(db: Session, answer_id: int):
     db_answer = db.query(models.Answer).filter(models.Answer.id == answer_id).first()
     db.delete(db_answer)
     db.commit()
+    return db_answer
+
+#update_answer
+def update_answer(db: Session, answer_id: int, answer: schemas.AnswerCreate):
+    db_answer = db.query(models.Answer).filter(models.Answer.id == answer_id).first()
+    db_answer.title = answer.title
+    db_answer.description = answer.description
+    db_answer.is_correct = answer.is_correct
+    db.commit()
+    db.refresh(db_answer)
     return db_answer
